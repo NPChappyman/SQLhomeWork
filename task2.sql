@@ -63,9 +63,15 @@ INSERT INTO employer (employer_name) VALUES
 ('Avito'),
 ('ООО рога и копыта');
 
-INSERT INTO employee (employee_name)
+INSERT INTO employee (employee_name,first_name, last_name,phone_number)
 SELECT
-    'Employee_' || generate
+    'Employee_' || generate,
+    md5(random()::text) AS first_name,
+        md5(random()::text) AS last_name,
+        '+7' || (900 + floor(random() * 100))::int ||
+        lpad((floor(random() * 1000))::text, 3, '0') ||
+        lpad((floor(random() * 100))::text, 2, '0') ||
+        lpad((floor(random() * 100))::text, 2, '0') AS phone_number
 FROM generate_series(1,100000) as generate;
 
 
@@ -99,12 +105,7 @@ WITH random_resumes AS (
         (1 + trunc(random() * 100000))::int AS employee_id,
         md5(random()::text) AS title,
         (timestamp '2025-01-01' + (timestamp '2026-03-08' - timestamp '2025-01-01')*random()) as openned_at,
-        md5(random()::text) AS first_name,
-        md5(random()::text) AS last_name,
-        '+7' || (900 + floor(random() * 100))::int ||
-        lpad((floor(random() * 1000))::text, 3, '0') ||
-        lpad((floor(random() * 100))::text, 2, '0') ||
-        lpad((floor(random() * 100))::text, 2, '0') AS phone_number,
+
         (12000 + trunc(random() * 88001))::int AS compensation_from,
         (100000 + trunc(random() * 100001))::int AS compensation_to,
         (1 + trunc(random() * (SELECT max(area_id) FROM area)))::int AS area_id,
@@ -113,15 +114,15 @@ WITH random_resumes AS (
     FROM generate_series(1,100000)
 )
 INSERT INTO resume (
-    employee_id, title, created_at,first_name, last_name, phone_number,
-    compensation_from, compensation_to, region_id, specialization_id
+    employee_id, title, created_at,
+    compensation_from, compensation_to, area_id, specialization_id
 )
 SELECT *
 FROM random_resumes;
 
 
 INSERT INTO response (vacancy_id, resume_id, created_at, description )
-SELECT vac.vacancy_id, res.resume_id, GREATEST(vac.openned_at,res.created_at) +(random() * interval '30 days'),
+SELECT vac.vacancy_id, res.resume_id, GREATEST(vac.created_at,res.created_at) +(random() * interval '30 days'),
         substr(md5(random()::text),1,10) AS description
 FROM vacancy vac
 JOIN resume res ON vac.specialization_id = res.specialization_id  ;

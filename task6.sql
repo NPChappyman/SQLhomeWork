@@ -16,4 +16,5 @@ CREATE INDEX response_vacancy_index ON response(vacancy_id);
 --Если employee хочет получить вакансии с зарплатой в диапозоне (compensation_from, compensation_to)
 CREATE INDEX vacancy_compensation_from_to_index ON vacancy(compensation_from, compensation_to);
 
-
+--Полезно в 5 задании - позволяет ускорить проверку
+CREATE INDEX response_created_at_index ON response(created_at);

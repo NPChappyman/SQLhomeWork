@@ -6,7 +6,10 @@ CREATE TABLE specialization (
 CREATE TABLE employee
 (
     employee_id   integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    employee_name text not null
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    middle_name text,
+    phone_number varchar(12)
 );
 
 CREATE TABLE area
@@ -28,16 +31,11 @@ CREATE TABLE resume (
     title text NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
 
-    first_name text NOT NULL,
-    last_name text NOT NULL,
-    middle_name text,
-    phone_number varchar(12),
-
     compensation_from integer,
     compensation_to   integer,
 
-    region_id integer NOT NULL,
-    FOREIGN KEY (region_id) REFERENCES area(area_id),
+    area_id integer NOT NULL,
+    FOREIGN KEY (area_id) REFERENCES area(area_id),
     specialization_id integer NOT NULL,
     FOREIGN KEY (specialization_id) REFERENCES specialization(specialization_id)
 );
@@ -52,7 +50,7 @@ CREATE TABLE vacancy (
     hours_per_week integer,
     compensation_from integer,
     compensation_to integer,
-    openned_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
 
     area_id integer NOT NULL,
     FOREIGN KEY (area_id) REFERENCES area (area_id),

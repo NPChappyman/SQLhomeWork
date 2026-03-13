@@ -1,8 +1,8 @@
 SELECT
-    extract(MONTH from openned_at) as month,
+    extract(MONTH from created_at) as month,
     count(vacancy_id) as amount
 FROM vacancy
-GROUP BY extract(MONTH from openned_at)
+GROUP BY extract(MONTH from created_at)
 ORDER BY amount DESC
 LIMIT 1;
 
